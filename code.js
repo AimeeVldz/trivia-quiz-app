@@ -1,69 +1,86 @@
 let allClues = [];
 let score = 0;
-
+let clue = [];
+let categoryDisplay = document.querySelector(".category");
 let clueDisplay = document.querySelector(".clue-text");
-let correctAnswer = document.querySelector(".correct-answer");
+let congratsDisplay = document.querySelector(".congrats");
+let gameOverDisplay = document.querySelector(".game-over");
+let correctAnswerDisplay = document.querySelector(".correct-answer");
 let answerInput = document.getElementById("user-answer");
-let scoreDisplay = document.querySelector(".score-count")
-let answerValue = answerInput.value;
-let question = ""
-let answer = ""
+let scoreDisplay = document.querySelector(".score-count");
+let restartBtn = document.getElementById("play-again");
+let answerValue = "";
+let question = "";
+let answer = "";
+let category = "";
+
 function fetchingData() {
-  fetch(`https://jservice.io/api/random?id=${Math.floor(Math.random())}count=100`)
+  fetch("https://jservice.io/api/random?")
     .then((response) => response.json())
-    .then((clues) => {
-     for (let clue of clues){
-        allClues.push(clue)
-         question = clue.question
-         answer = clue.answer
-        return clueDisplay.append(question), correctAnswer.append(answer)
-        }
-      })
-    };
+    .then((data) => {
+      let id = data[0].category_id;
+
+      fetch(`https://jservice.io/api/clues?category=${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          allClues = data;
+          questionGenerator();
+        });
+    });
+}
 
 fetchingData();
-console.log(allClues)
 
-function questionGenerator() {
-  
-}
-
+let submitAnswer = document
+  .getElementById("submit-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    document.getElementById("submit-btn");
+    return verifyAnswer(answerValue);
+  });
 
 function verifyAnswer(answerValue) {
-    if(answerValue === answer.toLowerCase()){
-        scoreDisplay.textContent(`${score += 1}`);
-    } else {
-        let gameOver = document.createElement("h2");
-        gameOver.append("Game Over")
-        document.getElementById("play-again")
-        document.addEventListener("click", restartGame())
-    }
-  // Verify if the answer is correct
-  // use an if statement and toLoweCase
-  //display congratulatory message if correct && score +=  1 && call clue() again
-  //|| display correct answer and set timer, then display button to restart
-
+  answerValue = answerInput.value;
+  answerInput.value = "";
+  if (answerValue.toLowerCase() === answer.toLowerCase()) {
+    return correct(), questionGenerator();
+  } else {
+    return incorrect();
+  }
 }
 
-function restartGame(){
-    window.location.reload();
+function correct() {
+  congratsDisplay.innerHTML = "Good Job";
+  scoreDisplay.textContent = score += 1;
 }
-//How am I gonna use the data fetched?
-// let question = document.getElementById("question")
-// question.innerHTML = fetchingData.data
 
-// function processResponse (pageResponse){
-// let randomQuestion = pageResponse.question
-//     console.log(this.question)
-// }
+function incorrect() {
+  congratsDisplay.innerHTML = "";
+  scoreDisplay.textContent = score = 0;
+  correctAnswerDisplay.style.display = "block";
+  gameOverDisplay.innerHTML = "Game Over";
+  gameOverDisplay.style.display = "block";
+  restartBtn.style.display = "inline-flex";
+  restartBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+    restartGame();
+  });
+}
 
-// I have fetched the information, what is next? how do I work with the information received?
+function questionGenerator() {
+  let index = Math.floor(Math.random() * allClues.length);
+  clue = allClues[index];
+  allClues.splice(index, 1);
+  question = clue.question;
+  answer = clue.answer;
+  category = clue.category.title;
+  return (
+    (clueDisplay.innerHTML = question),
+    (correctAnswerDisplay.innerHTML = answer),
+    (categoryDisplay.innerHTML = category)
+  );
+}
 
-//function questionGenerator(){
-//math.Random
-//}
-
-// class Jeopardy {
-//     constructor ()
-
-// }
+function restartGame() {
+  window.location.reload();
+}

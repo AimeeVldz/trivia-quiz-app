@@ -20,25 +20,32 @@
   </head>
 
   <body>
-  
-   <div class="app">
-    <header class="top-header">
-       <h1>Jeopardy</h1>
-       <p class="score">Score <span class="score-count"></span></p>
-    </header>
+    <div class="app">
+      <header class="top-header">
+        <h1 class="title">Jeopardy</h1>
+        <p class="score">Score<span class="score-count"></span></p>
+      </header>
 
-     <div class="main-div">
-           <h2 class="clue-text"></h2>
-           <form autocomplete="off">
-              <input id="user-answer" type="text" placeholder="Answer Here!" />
-              <button type="submit">Answer</button>
-           </form>
-           <h2 class="correct-answer" style="display: none;"></h2>
-           <button id="play-again" style="display: none">Play Again?</button>
-        </div>
-     </div>
- </div>
-</div>
+      <div class="main-div">
+        <h2 class="category"></h2>
+        <h2 class="clue-text"></h2>
+        <h2 class="congrats"></h2>
+        <h1 class="game-over" style="display: none"></h1>
+        <form autocomplete="off">
+          <input
+            id="user-answer"
+            type="text"
+            placeholder="Answer Here!"
+            style="display: inline-flexbox"
+          />
+          <button id="submit-btn" style="display: inline-flexbox" type="submit">
+            Answer
+          </button>
+        </form>
+        <h3 class="correct-answer" style="display: none">Correct Answer:</h3>
+        <button id="play-again" style="display: none">Play Again?</button>
+      </div>
+    </div>
     <script src="code.js"></script>
   </body>
 </html>
